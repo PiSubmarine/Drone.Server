@@ -334,12 +334,14 @@ namespace PiSubmarine::Drone::Server
                   VerticalController,
                   GimbalController,
                   dependencies.LampController,
-                  VideoController)
+                  VideoController,
+                  m_LoggerFactory)
             , ControlEngine(
                   LeaseManager,
                   LeaseManager,
                   ManualPilot,
-                  HoldPositionPilot)
+                  HoldPositionPilot,
+                  m_LoggerFactory)
             , ControlServer(
                   ControlEngine,
                   ControlDeserializer,
