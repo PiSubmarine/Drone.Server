@@ -45,8 +45,8 @@ namespace PiSubmarine::Drone::Server
             VerticalControlConfig VerticalControl;
             std::optional<Video::Subscription::Api::Endpoint> StartupVideoEndpoint;
             bool StartupVideoEnable = false;
-            Udp::Api::Endpoint ControlEndpoint{"127.0.0.1", 50052};
-            Udp::Api::Endpoint TelemetryEndpoint{"127.0.0.1", 50053};
+            Udp::Api::Endpoint ControlEndpoint{"0.0.0.0", 50052};
+            Udp::Api::Endpoint TelemetryEndpoint{"0.0.0.0", 50053};
             std::chrono::nanoseconds TickPeriod = std::chrono::milliseconds(10);
             std::size_t ReceiveQueueCapacity = 64;
             std::size_t MaxDatagramSize = 65507;
