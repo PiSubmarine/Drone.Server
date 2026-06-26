@@ -1,0 +1,15 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=git
+command=C:/Program Files/CMake/bin/cmake.exe;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;C:/Software/GitHub/PiSubmarine/Drone.Server/out/build/windows-msvc-debug/CMakeFiles/fc-tmp/pisubmarinebuild/pisubmarinebuild-gitclone.cmake
+source_dir=C:/Software/GitHub/PiSubmarine/Drone.Server/out/build/windows-msvc-debug/_deps/pisubmarinebuild-src
+work_dir=C:/Software/GitHub/PiSubmarine/Drone.Server/out/build/windows-msvc-debug/_deps
+repository=https://github.com/PiSubmarine/Build.CMake.git
+remote=origin
+init_submodules=TRUE
+recurse_submodules=--recursive
+submodules=
+CMP0097=NEW
+      
