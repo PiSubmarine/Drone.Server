@@ -4,8 +4,6 @@ message("Adding library: ${PISUBMARINE_MODULE_NAME}")
 add_library(${PISUBMARINE_MODULE_NAME}
         PiSubmarine/Drone/Server/ErrorCode.cpp
         PiSubmarine/Drone/Server/LoggerFactory.cpp
-        PiSubmarine/Drone/Server/LoggerFactory.h
-        PiSubmarine/Drone/Server/Logging.h
         PiSubmarine/Drone/Server/Runtime.cpp)
 target_include_directories(${PISUBMARINE_MODULE_NAME}
         PUBLIC "../public"

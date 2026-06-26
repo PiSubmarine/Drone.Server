@@ -9,24 +9,6 @@ namespace PiSubmarine::Drone::Server
 {
     namespace
     {
-        class BallastControllerStub final : public Ballast::Api::IController
-        {
-        public:
-            [[nodiscard]] Error::Api::Result<void> SetTargetPosition(const Ballast::BallastFillFraction position) override
-            {
-                m_Target = position;
-                return {};
-            }
-
-            [[nodiscard]] Error::Api::Result<Ballast::BallastFillFraction> GetTargetPosition() const override
-            {
-                return m_Target;
-            }
-
-        private:
-            Ballast::BallastFillFraction m_Target = Ballast::BallastFillFraction::Empty();
-        };
-
         class BallastTelemetryProviderStub final : public Ballast::Telemetry::Api::IProvider
         {
         public:
@@ -216,7 +198,6 @@ namespace PiSubmarine::Drone::Server
         };
 
         [[nodiscard]] Runtime::Dependencies MakeDependencies(
-            BallastControllerStub& ballastController,
             BallastTelemetryProviderStub& ballastTelemetryProvider,
             BatteryTelemetryProviderStub& batteryTelemetryProvider,
             BidirectionalMotorStub& ballastMotor,
@@ -231,7 +212,6 @@ namespace PiSubmarine::Drone::Server
             TickableStub& tickable)
         {
             return Runtime::Dependencies{
-                .BallastController = ballastController,
                 .BallastTelemetryProvider = ballastTelemetryProvider,
                 .BatteryTelemetryProvider = batteryTelemetryProvider,
                 .BallastMotorController = ballastMotor,
@@ -255,7 +235,6 @@ namespace PiSubmarine::Drone::Server
 
     TEST(RuntimeTest, IsNotRunningBeforeRun)
     {
-        BallastControllerStub ballastController;
         BallastTelemetryProviderStub ballastTelemetryProvider;
         BatteryTelemetryProviderStub batteryTelemetryProvider;
         BidirectionalMotorStub ballastMotor;
@@ -272,7 +251,6 @@ namespace PiSubmarine::Drone::Server
         Runtime runtime(
             Runtime::Config{},
             MakeDependencies(
-                ballastController,
                 ballastTelemetryProvider,
                 batteryTelemetryProvider,
                 ballastMotor,
@@ -291,7 +269,6 @@ namespace PiSubmarine::Drone::Server
 
     TEST(RuntimeTest, RunFailsWhenGrpcTlsConfigurationIsMissing)
     {
-        BallastControllerStub ballastController;
         BallastTelemetryProviderStub ballastTelemetryProvider;
         BatteryTelemetryProviderStub batteryTelemetryProvider;
         BidirectionalMotorStub ballastMotor;
@@ -308,7 +285,6 @@ namespace PiSubmarine::Drone::Server
         Runtime runtime(
             Runtime::Config{},
             MakeDependencies(
-                ballastController,
                 ballastTelemetryProvider,
                 batteryTelemetryProvider,
                 ballastMotor,

@@ -54,7 +54,6 @@ namespace PiSubmarine::Drone::Server
 
         struct Dependencies
         {
-            Ballast::Api::IController& BallastController;
             Ballast::Telemetry::Api::IProvider& BallastTelemetryProvider;
             Battery::Telemetry::Api::IProvider& BatteryTelemetryProvider;
             Motor::Bidirectional::Api::IController& BallastMotorController;
