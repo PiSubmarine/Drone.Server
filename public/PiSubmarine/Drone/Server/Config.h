@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <optional>
 
+#include "PiSubmarine/Control/Gimbal/Servo/Config.h"
 #include "PiSubmarine/Drone/Server/BallastControlTuning.h"
 #include "PiSubmarine/Drone/Server/VerticalControlTuning.h"
 #include "PiSubmarine/Grpc/Server/Server.h"
@@ -19,6 +20,7 @@ namespace PiSubmarine::Drone::Server
         Video::Server::GStreamer::Config VideoController;
         BallastControlTuning BallastControl;
         VerticalControlTuning VerticalControl;
+        Control::Gimbal::Servo::Config Gimbal;
         std::optional<Video::Subscription::Api::Endpoint> StartupVideoEndpoint;
         bool StartupVideoEnable = false;
         Udp::Api::Endpoint ControlEndpoint;

@@ -328,7 +328,7 @@ namespace PiSubmarine::Drone::Server
                       .DepthDeadband = config.VerticalControl.DepthDeadband,
                       .MaximumBallastCorrection = config.VerticalControl.MaximumBallastCorrection,
                       .InitialEquilibriumBallastFill = config.VerticalControl.InitialEquilibriumBallastFill})
-            , GimbalController(dependencies.ServoController)
+            , GimbalController(config.Gimbal, dependencies.ServoController)
             , ManualPilot(
                   HorizontalController,
                   VerticalController,
