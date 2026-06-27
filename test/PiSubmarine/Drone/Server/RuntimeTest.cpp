@@ -197,7 +197,7 @@ namespace PiSubmarine::Drone::Server
             }
         };
 
-        [[nodiscard]] Runtime::Dependencies MakeDependencies(
+        [[nodiscard]] Dependencies MakeDependencies(
             BallastTelemetryProviderStub& ballastTelemetryProvider,
             BatteryTelemetryProviderStub& batteryTelemetryProvider,
             BidirectionalMotorStub& ballastMotor,
@@ -211,7 +211,7 @@ namespace PiSubmarine::Drone::Server
             ServoControllerStub& servoController,
             TickableStub& tickable)
         {
-            return Runtime::Dependencies{
+            return Dependencies{
                 .BallastTelemetryProvider = ballastTelemetryProvider,
                 .BatteryTelemetryProvider = batteryTelemetryProvider,
                 .BallastMotorController = ballastMotor,
@@ -249,7 +249,7 @@ namespace PiSubmarine::Drone::Server
         TickableStub tickable;
 
         Runtime runtime(
-            Runtime::Config{},
+            Config{},
             MakeDependencies(
                 ballastTelemetryProvider,
                 batteryTelemetryProvider,
@@ -283,7 +283,7 @@ namespace PiSubmarine::Drone::Server
         TickableStub tickable;
 
         Runtime runtime(
-            Runtime::Config{},
+            Config{},
             MakeDependencies(
                 ballastTelemetryProvider,
                 batteryTelemetryProvider,

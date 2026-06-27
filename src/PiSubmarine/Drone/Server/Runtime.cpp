@@ -280,11 +280,11 @@ namespace PiSubmarine::Drone::Server
                   dependencies.BallastMotorController,
                   dependencies.BallastTelemetryProvider,
                   Ballast::Pid::Controller::Config{
-                      .ProportionalGain = 20,
-                      .IntegralGainPerSecond = 0.25,
-                      .IntegralLimit = 1.0,
-                      .PositionDeadband = NormalizedFraction{0.01},
-                      .MaxDutyCycle = NormalizedFraction{1}},
+                      .ProportionalGain = config.BallastControl.ProportionalGain,
+                      .IntegralGainPerSecond = config.BallastControl.IntegralGainPerSecond,
+                      .IntegralLimit = config.BallastControl.IntegralLimit,
+                      .PositionDeadband = config.BallastControl.PositionDeadband,
+                      .MaxDutyCycle = config.BallastControl.MaxDutyCycle},
                   Ballast::BallastFillFraction::Empty())
             , BallastTelemetrySerializer(dependencies.BallastTelemetryProvider)
             , BatteryTelemetrySerializer(dependencies.BatteryTelemetryProvider)
@@ -321,12 +321,12 @@ namespace PiSubmarine::Drone::Server
                   BallastController,
                   dependencies.DepthTelemetryProvider,
                   Control::Vertical::Ballast::Controller::Config{
-                      .ProportionalGain = 0.5,
-                      .IntegralGainPerSecond = 0.5,
-                      .DerivativeGainSeconds = 0.5,
-                      .IntegralLimitMetersSeconds = 100,
-                      .DepthDeadband = 0.05_m,
-                      .MaximumBallastCorrection = NormalizedFraction{0.5},
+                      .ProportionalGain = config.VerticalControl.ProportionalGain,
+                      .IntegralGainPerSecond = config.VerticalControl.IntegralGainPerSecond,
+                      .DerivativeGainSeconds = config.VerticalControl.DerivativeGainSeconds,
+                      .IntegralLimitMetersSeconds = config.VerticalControl.IntegralLimitMetersSeconds,
+                      .DepthDeadband = config.VerticalControl.DepthDeadband,
+                      .MaximumBallastCorrection = config.VerticalControl.MaximumBallastCorrection,
                       .InitialEquilibriumBallastFill = config.VerticalControl.InitialEquilibriumBallastFill})
             , GimbalController(dependencies.ServoController)
             , ManualPilot(

@@ -1,0 +1,19 @@
+{
+  "dependencies": [
+    "boost-asio",
+    "cli11",
+    "grpc",
+    "gtest",
+    "protobuf",
+    "spdlog",
+    {
+      "name": "gstreamer",
+      "default-features": false,
+      "features": [
+        "plugins-base",
+        "plugins-good",
+        "openh264"
+      ]
+    }
+  ]
+}
