@@ -3,8 +3,10 @@
 #include <format>
 #include <mutex>
 #include <string>
+#include <vector>
 
 #include <spdlog/logger.h>
+#include <spdlog/sinks/dup_filter_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include "PiSubmarine/Drone/Server/Logging.h"
@@ -17,31 +19,29 @@ namespace PiSubmarine::Drone::Server
 
         std::mutex SharedLogFormattingMutex;
         std::size_t SharedLoggerNameWidth = DefaultLoggerNameWidth;
-        std::weak_ptr<spdlog::sinks::sink> SharedSink;
+        std::weak_ptr<spdlog::sinks::sink> SharedTerminalSink;
 
         [[nodiscard]] std::string MakeLogPattern(const std::size_t loggerNameWidth)
         {
             return std::format("[%Y-%m-%d %T.%e] [%-{}n] [%^%-8l%$] [%s:%#] %v", loggerNameWidth);
         }
 
-        [[nodiscard]] std::shared_ptr<spdlog::sinks::sink> GetSharedSink()
+        [[nodiscard]] std::vector<spdlog::sink_ptr> GetSharedSinks()
         {
             std::scoped_lock lock(SharedLogFormattingMutex);
 
-            if (const auto sink = SharedSink.lock())
+            if (const auto sink = SharedTerminalSink.lock())
             {
-                return sink;
+                return {sink};
             }
 
             auto sink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
             sink->set_pattern(MakeLogPattern(SharedLoggerNameWidth));
-            SharedSink = sink;
-            return sink;
+            SharedTerminalSink = sink;
+            return {sink};
         }
 
-        void EnsureSinkPatternFitsName(
-            const std::shared_ptr<spdlog::sinks::sink>& sink,
-            const std::string_view name)
+        void EnsureSinkPatternsFitName(const std::vector<spdlog::sink_ptr>& sinks, const std::string_view name)
         {
             std::scoped_lock lock(SharedLogFormattingMutex);
 
@@ -51,21 +51,36 @@ namespace PiSubmarine::Drone::Server
             }
 
             SharedLoggerNameWidth = name.size();
-            sink->set_pattern(MakeLogPattern(SharedLoggerNameWidth));
+            const auto pattern = MakeLogPattern(SharedLoggerNameWidth);
+            for (const auto& sink : sinks)
+            {
+                sink->set_pattern(pattern);
+            }
         }
     }
 
-    std::shared_ptr<spdlog::logger> CreateConfiguredLogger(const std::string_view name)
+    std::shared_ptr<spdlog::logger> CreateConfiguredLogger(const std::string_view name, const LoggingConfig& config)
     {
-        const auto sink = GetSharedSink();
-        EnsureSinkPatternFitsName(sink, name);
-        return std::make_shared<spdlog::logger>(std::string(name), sink);
+        const auto sinks = GetSharedSinks();
+        EnsureSinkPatternsFitName(sinks, name);
+
+        auto duplicateFilterSink =
+            std::make_shared<spdlog::sinks::dup_filter_sink_mt>(config.DuplicateFilterMaxSkipDuration);
+        for (const auto& sink : sinks)
+        {
+            duplicateFilterSink->add_sink(sink);
+        }
+
+        return std::make_shared<spdlog::logger>(std::string(name), std::move(duplicateFilterSink));
     }
 
-    LoggerFactory::LoggerFactory() = default;
+    LoggerFactory::LoggerFactory(LoggingConfig config)
+        : m_Config(std::move(config))
+    {
+    }
 
     std::shared_ptr<spdlog::logger> LoggerFactory::CreateLogger(const std::string_view name)
     {
-        return CreateConfiguredLogger(name);
+        return CreateConfiguredLogger(name, m_Config);
     }
 }

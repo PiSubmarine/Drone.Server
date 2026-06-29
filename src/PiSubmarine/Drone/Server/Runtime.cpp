@@ -262,7 +262,7 @@ namespace PiSubmarine::Drone::Server
     {
     public:
         Impl(const Config& config, Dependencies dependencies)
-            : m_LoggerFactory()
+            : m_LoggerFactory(config.Logging)
             , LeaseManager(m_LoggerFactory)
             , GrpcServer(m_LoggerFactory, config.GrpcServer)
             , LeaseServer(LeaseManager, m_LoggerFactory)

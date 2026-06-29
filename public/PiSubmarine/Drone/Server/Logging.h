@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <memory>
 #include <string_view>
 
@@ -7,5 +8,12 @@
 
 namespace PiSubmarine::Drone::Server
 {
-    [[nodiscard]] std::shared_ptr<spdlog::logger> CreateConfiguredLogger(std::string_view name);
+    struct LoggingConfig
+    {
+        std::chrono::milliseconds DuplicateFilterMaxSkipDuration = std::chrono::seconds(5);
+    };
+
+    [[nodiscard]] std::shared_ptr<spdlog::logger> CreateConfiguredLogger(
+        std::string_view name,
+        const LoggingConfig& config = {});
 }
